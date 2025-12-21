@@ -1,0 +1,18 @@
+# Нежелательные файлы для Git
+*.log
+*.tmp
+*~
+.DS_Store
+
+# Логи системы
+/tmp/layout_*.log
+
+# Персональные настройки
+backup/
+config/personal/
+.local/share/gsettings
+
+# Временные файлы
+.cache/
+*.pid
+*.lock

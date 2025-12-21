@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Seamless Layout Monitor
+Comment=Seamless keyboard layout indicator for Wayland
+Exec=%h/.local/bin/autostart_layout_monitor
+Icon=input-keyboard
+Terminal=false
+StartupNotify=false
+Categories=Utility;System;
+X-GNOME-Autostart-enabled=true
+Hidden=false

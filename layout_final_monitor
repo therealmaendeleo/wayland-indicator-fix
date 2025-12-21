@@ -1,0 +1,63 @@
+#!/bin/bash
+# Финальное решение - бесшовное обновление через gsettings без перезапуска wingpanel
+
+LOG_FILE="/tmp/layout_final_monitor.log"
+
+# Функция логирования
+log_msg() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+}
+
+# Инициализация
+PREV_CURRENT=""
+PREV_MRU=""
+
+log_msg "Запуск финального монитора раскладок"
+
+# Ожидание запуска wingpanel
+while ! pgrep -f "io.elementary.wingpanel" > /dev/null; do
+    log_msg "Ожидание запуска wingpanel..."
+    sleep 2
+done
+
+log_msg "Wingpanel найден, начинаю бесшовное мониторинг"
+
+while true; do
+    sleep 0.5
+    CURRENT=$(gsettings get org.gnome.desktop.input-sources current | awk '{print $2}' 2>/dev/null)
+    MRU=$(gsettings get org.gnome.desktop.input-sources mru-sources 2>/dev/null)
+    
+    # Проверяем изменилась ли раскладка
+    if [ "$CURRENT" != "$PREV_CURRENT" ] && [ -n "$CURRENT" ]; then
+        LAYOUT_NAME="Unknown"
+        LAYOUT_CODE=""
+        
+        if [ "$CURRENT" = "0" ]; then
+            LAYOUT_NAME="US"
+            LAYOUT_CODE="us"
+            NEW_MRU="[('xkb', 'us'), ('xkb', 'ru')]"
+        elif [ "$CURRENT" = "1" ]; then
+            LAYOUT_NAME="RU"
+            LAYOUT_CODE="ru"
+            NEW_MRU="[('xkb', 'ru'), ('xkb', 'us')]"
+        fi
+        
+        log_msg "Раскладка изменена на: $LAYOUT_NAME ($CURRENT)"
+        
+        # Бесшовное обновление через изменение MRU источников
+        if [ "$MRU" != "$NEW_MRU" ]; then
+            gsettings set org.gnome.desktop.input-sources mru-sources "$NEW_MRU"
+            log_msg "MRU обновлено для $LAYOUT_NAME"
+        fi
+        
+        # Дополнительный метод: обновить все связанные свойства
+        gsettings set org.gnome.desktop.input-sources per-window true
+        sleep 0.1
+        gsettings set org.gnome.desktop.input-sources per-window true
+        
+        log_msg "Свойства обновлены, wingpanel должен отразить изменения"
+        
+        PREV_CURRENT="$CURRENT"
+        PREV_MRU="$MRU"
+    fi
+done

@@ -1,0 +1,12 @@
+#!/bin/bash
+# Показывает текущую раскладку клавиатуры
+
+CURRENT=$(gsettings get org.gnome.desktop.input-sources current | awk '{print $2}')
+
+if [ "$CURRENT" = "0" ]; then
+    echo "US"
+elif [ "$CURRENT" = "1" ]; then
+    echo "RU"
+else
+    echo "Unknown"
+fi
