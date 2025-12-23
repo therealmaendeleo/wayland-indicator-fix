@@ -5,8 +5,8 @@ A tiny utility that fixes Wayland layout indicator not updating in elementary OS
 ## Installation
 
 ```bash
-git clone https://github.com/your-username/seamless-layout-indicator
-cd seamless-layout-indicator
+git clone https://github.com/therealmaendeleo/wayland-indicator-fix
+cd wayland-indicator-fix
 ./setup.sh
 ```
 
