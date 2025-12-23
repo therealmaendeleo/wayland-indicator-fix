@@ -28,8 +28,8 @@ install() {
     # Копируем скрипты
     chmod +x layout_*
     cp layout_* "$INSTALL_DIR/"
-    chmod +x install.sh uninstall.sh build.sh publish.sh
-    cp install.sh uninstall.sh build.sh publish.sh "$INSTALL_DIR/"
+    chmod +x install.sh uninstall.sh build.sh
+    cp install.sh uninstall.sh build.sh "$INSTALL_DIR/"
     
     # Автозапуск
     sed "s|%h|$HOME|g" layout-monitor.desktop > "$AUTOSTART_DIR/layout-monitor.desktop"
